@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title><%= user.name %>'s Profile</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  
+  <style>
+    body {
+      background-color: #171719;
+      color: white;
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+    }
+
+    h1, h2 {
+      color: #00ffaa;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 0.5rem;
+      border-radius: 6px;
+      border: none;
+    }
+
+    button {
+      background-color: #00ffaa;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      margin-top: 0.5rem;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background-color: #00cc88;
+    }
+
+    .post-card {
+      background-color: #2a2a2a;
+      padding: 1rem;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+    }
+
+    .post-actions {
+      margin-top: 0.5rem;
+    }
+
+    .post-actions form {
+      display: inline;
+    }
+
+    .edit-btn, .like-btn {
+      background-color: #444;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      margin-right: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .edit-btn:hover {
+      background-color: #666;
+    }
+
+    .like-btn:hover {
+      background-color: #008800;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="flex flex-row w-32 h-32 mb-4">
+      <img class=" w-full h-full rounded-lg object-cover" src="/images/uploads/<%= user.profilePic %>" alt="Profile Picture">
+     <h1>Hello, <%= user.name %> 👋</h1>
+    </div>
+   
+
+    <h2>Create a New Post</h2>
+    <form action="/post" method="POST">
+      <textarea name="content" placeholder="Write something..." required></textarea>
+      <br>
+      <button type="submit">Post</button>
+    </form>
+
+    <% if (user.posts && user.posts.length > 0) { %>
+      <h2>Your Posts</h2>
+      <% user.posts.reverse().forEach(function(post) { %>
+       <div class="flex flex-row justify-between items-center mb-4">
+
+         <div class="post-card ">
+          <strong><%= post.content %></strong><br>
+          <small>
+            Posted on: <%= post.date ? post.date.toDateString() : 'Unknown date' %> |
+            Likes: <%= post.likes ? post.likes.length : 0 %>
+          </small>
+
+          <div class="post-actions">
+            <!-- Like Button -->
+            <form action="/like/<%= post._id %>" method="POST">
+              <button class="like-btn" type="submit">❤️ Like</button>
+            </form>
+
+            <!-- Edit Button (you can link to an edit page or modal) -->
+            <form action="/edit/<%= post._id %>" method="GET">
+              <button class="edit-btn" type="submit">✏️ Edit</button>
+            </form>
+          </div>
+        </div>
+       </div>
+      <% }) %>
+    <% } else { %>
+      <p>You have no posts yet.</p>
+    <% } %>
+  </div>
+</body>
+</html>
